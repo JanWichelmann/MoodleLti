@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoodleLti", "MoodleLti\MoodleLti.csproj", "{03AD7906-0370-49B3-B027-657E8F72D723}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleToolProvider", "SampleToolProvider\SampleToolProvider.csproj", "{E693E2C2-1604-4B2E-B314-D170BC232731}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{74B56253-FFD1-4FFC-8BB6-6C145C457074}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoodleLti.DependencyInjection", "MoodleLti.DependencyInjection\MoodleLti.DependencyInjection.csproj", "{84FB738B-F4D8-4B88-AB53-21A6F38A8038}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LtiLibrary.NetCore", "LtiLibrary\src\LtiLibrary.NetCore\LtiLibrary.NetCore.csproj", "{AA9A4E5F-BF28-4BA3-B840-0D0412B4E577}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LtiLibrary.AspNetCore", "LtiLibrary\src\LtiLibrary.AspNetCore\LtiLibrary.AspNetCore.csproj", "{F757D848-0DB5-4953-B272-8E1C35233B8F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{03AD7906-0370-49B3-B027-657E8F72D723}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03AD7906-0370-49B3-B027-657E8F72D723}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03AD7906-0370-49B3-B027-657E8F72D723}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03AD7906-0370-49B3-B027-657E8F72D723}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E693E2C2-1604-4B2E-B314-D170BC232731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E693E2C2-1604-4B2E-B314-D170BC232731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E693E2C2-1604-4B2E-B314-D170BC232731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E693E2C2-1604-4B2E-B314-D170BC232731}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84FB738B-F4D8-4B88-AB53-21A6F38A8038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84FB738B-F4D8-4B88-AB53-21A6F38A8038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84FB738B-F4D8-4B88-AB53-21A6F38A8038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84FB738B-F4D8-4B88-AB53-21A6F38A8038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA9A4E5F-BF28-4BA3-B840-0D0412B4E577}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA9A4E5F-BF28-4BA3-B840-0D0412B4E577}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA9A4E5F-BF28-4BA3-B840-0D0412B4E577}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA9A4E5F-BF28-4BA3-B840-0D0412B4E577}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F757D848-0DB5-4953-B272-8E1C35233B8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F757D848-0DB5-4953-B272-8E1C35233B8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F757D848-0DB5-4953-B272-8E1C35233B8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F757D848-0DB5-4953-B272-8E1C35233B8F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FAEDBA15-5C31-45C4-8CEF-536559DAECC8}
+	EndGlobalSection
+EndGlobal

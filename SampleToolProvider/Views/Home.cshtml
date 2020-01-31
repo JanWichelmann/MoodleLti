@@ -1,0 +1,42 @@
+﻿@using SampleToolProvider.Controllers;
+@{
+    // Set layout
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    var columns = (IEnumerable<MoodleLti.Models.MoodleGradebookColumn>)ViewData["columns"];
+}
+
+<h1>Moodle Gradebook Sample</h1>
+
+<h2>Gradebook Columns</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Tag</th>
+            <th>Max. Score</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var col in columns)
+        {
+            <tr>
+                <td>@col.Id</td>
+                <td>@col.Title</td>
+                <td>@col.Tag</td>
+                <td>@col.MaximumScore</td>
+                <td><a href="@Url.Action(nameof(HomeController.DeleteColumnAsync), HomeController.ControllerName, new { id = col.Id })" style="color: red">Delete</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<form method="post" action="@Url.Action(nameof(HomeController.CreateColumnAsync), HomeController.ControllerName)">
+    Title: <input type="text" name="title"><br>
+    Tag: <input type="text" name="tag"><br>
+    Score: <input type="number" name="maxScore" min="0" max="1000" step="0.1"><br>
+    <input type="submit" value="Submit!">
+</form>

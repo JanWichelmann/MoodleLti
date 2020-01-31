@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using MoodleLti;
+using MoodleLti.Models;
+
+namespace SampleToolProvider.Controllers
+{
+    [Authorize]
+    [Route("home")]
+    public class HomeController : Controller
+    {
+        public static string ControllerName { get; } = "Home";
+
+        private readonly IMoodleGradebook _moodleGradebook;
+
+        public HomeController(IMoodleGradebook moodleGradebook)
+        {
+            _moodleGradebook = moodleGradebook;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RenderAsync()
+        {
+            // Load gradebook
+            ViewData["columns"] = await _moodleGradebook.GetColumnsAsync();
+
+            return View("/Views/Home.cshtml");
+        }
+
+        [HttpGet("delete/{id}")]
+        public async Task<IActionResult> DeleteColumnAsync(int id)
+        {
+            await _moodleGradebook.DeleteColumnAsync(id);
+
+            return await RenderAsync();
+        }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateColumnAsync(string title, string tag, float maxScore)
+        {
+            await _moodleGradebook.CreateColumnAsync(title, maxScore, tag);
+
+            return await RenderAsync();
+        }
+    }
+}
