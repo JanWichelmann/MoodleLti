@@ -14,10 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoodleLti.DependencyInjection", "MoodleLti.DependencyInjection\MoodleLti.DependencyInjection.csproj", "{84FB738B-F4D8-4B88-AB53-21A6F38A8038}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LtiLibrary.NetCore", "LtiLibrary\src\LtiLibrary.NetCore\LtiLibrary.NetCore.csproj", "{AA9A4E5F-BF28-4BA3-B840-0D0412B4E577}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LtiLibrary.AspNetCore", "LtiLibrary\src\LtiLibrary.AspNetCore\LtiLibrary.AspNetCore.csproj", "{F757D848-0DB5-4953-B272-8E1C35233B8F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,14 +32,6 @@ Global
 		{84FB738B-F4D8-4B88-AB53-21A6F38A8038}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84FB738B-F4D8-4B88-AB53-21A6F38A8038}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84FB738B-F4D8-4B88-AB53-21A6F38A8038}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AA9A4E5F-BF28-4BA3-B840-0D0412B4E577}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA9A4E5F-BF28-4BA3-B840-0D0412B4E577}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA9A4E5F-BF28-4BA3-B840-0D0412B4E577}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA9A4E5F-BF28-4BA3-B840-0D0412B4E577}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F757D848-0DB5-4953-B272-8E1C35233B8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F757D848-0DB5-4953-B272-8E1C35233B8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F757D848-0DB5-4953-B272-8E1C35233B8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F757D848-0DB5-4953-B272-8E1C35233B8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

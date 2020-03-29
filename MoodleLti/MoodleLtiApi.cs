@@ -159,7 +159,11 @@ namespace MoodleLti
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(expectedContentType));
 
             // Sign request object
-            await SecuredClient.SignRequest(_httpClient, HttpMethod.Get, url, new StringContent(string.Empty), _consumerKey, _sharedSecret, SignatureMethod.HmacSha1);
+            var reqMessage = new HttpRequestMessage(HttpMethod.Get, url)
+            {
+                Content = new StringContent(string.Empty)
+            };
+            await SecuredClient.SignRequest(_httpClient, reqMessage, _consumerKey, _sharedSecret, SignatureMethod.HmacSha1);
 
             // Send HTTP request and retrieve response
             // TODO exception handling
@@ -182,7 +186,11 @@ namespace MoodleLti
         {
             // Sign request object
             var encodedBody = new StringContent(body, Encoding.UTF8, bodyContentType);
-            await SecuredClient.SignRequest(_httpClient, HttpMethod.Post, url, encodedBody, _consumerKey, _sharedSecret, SignatureMethod.HmacSha1);
+            var reqMessage = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = encodedBody
+            };
+            await SecuredClient.SignRequest(_httpClient, reqMessage, _consumerKey, _sharedSecret, SignatureMethod.HmacSha1);
 
             // Send HTTP request and retrieve response
             // TODO exception handling
@@ -201,7 +209,11 @@ namespace MoodleLti
         {
             // Sign request object
             var encodedBody = new StringContent(body, Encoding.UTF8, bodyContentType);
-            await SecuredClient.SignRequest(_httpClient, HttpMethod.Put, url, encodedBody, _consumerKey, _sharedSecret, SignatureMethod.HmacSha1);
+            var reqMessage = new HttpRequestMessage(HttpMethod.Put, url)
+            {
+                Content = encodedBody
+            };
+            await SecuredClient.SignRequest(_httpClient, reqMessage, _consumerKey, _sharedSecret, SignatureMethod.HmacSha1);
 
             // Send HTTP request and retrieve response
             // TODO exception handling
@@ -217,7 +229,11 @@ namespace MoodleLti
         private async Task<string> DoDeleteRequestAsync(string url)
         {
             // Sign request object
-            await SecuredClient.SignRequest(_httpClient, HttpMethod.Delete, url, new StringContent(string.Empty), _consumerKey, _sharedSecret, SignatureMethod.HmacSha1);
+            var reqMessage = new HttpRequestMessage(HttpMethod.Delete, url)
+            {
+                Content = new StringContent(string.Empty)
+            };
+            await SecuredClient.SignRequest(_httpClient, reqMessage, _consumerKey, _sharedSecret, SignatureMethod.HmacSha1);
 
             // Send HTTP request and retrieve response
             // TODO exception handling

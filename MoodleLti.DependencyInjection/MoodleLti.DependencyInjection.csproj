@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Version>0.1.0</Version>
+    <Authors>Jan Wichelmann</Authors>
+    <Company />
+    <Description>Dependency Injection support for the MoodleLti package.</Description>
+    <PackageProjectUrl>https://github.com/Janworks/MoodleLti</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Janworks/MoodleLti.git</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
