@@ -167,7 +167,7 @@ namespace MoodleLti
 
             // Send HTTP request and retrieve response
             // TODO exception handling
-            using(var response = await _httpClient.GetAsync(url))
+            using(var response = await _httpClient.SendAsync(reqMessage))
             {
                 if(response.StatusCode == HttpStatusCode.OK)
                     return await response.ReadBody();
@@ -194,7 +194,7 @@ namespace MoodleLti
 
             // Send HTTP request and retrieve response
             // TODO exception handling
-            using var response = await _httpClient.PostAsync(url, encodedBody);
+            using var response = await _httpClient.SendAsync(reqMessage);
             return await response.ReadBody();
         }
 
@@ -217,7 +217,7 @@ namespace MoodleLti
 
             // Send HTTP request and retrieve response
             // TODO exception handling
-            using var response = await _httpClient.PutAsync(url, encodedBody);
+            using var response = await _httpClient.SendAsync(reqMessage);
             return await response.ReadBody();
         }
 
@@ -237,7 +237,7 @@ namespace MoodleLti
 
             // Send HTTP request and retrieve response
             // TODO exception handling
-            using(var response = await _httpClient.DeleteAsync(url))
+            using(var response = await _httpClient.SendAsync(reqMessage))
             {
                 // Should return 204 NoContent
             }
