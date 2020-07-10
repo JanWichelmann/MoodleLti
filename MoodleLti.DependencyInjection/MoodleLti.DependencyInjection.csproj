@@ -9,16 +9,24 @@
     <Description>Dependency Injection support for the MoodleLti package.</Description>
     <PackageProjectUrl>https://github.com/Janworks/MoodleLti</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Janworks/MoodleLti.git</RepositoryUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression></PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MoodleLti\MoodleLti.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
