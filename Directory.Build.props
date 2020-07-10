@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <Authors>Jan Wichelmann</Authors>
+    <Company />
+    <PackageProjectUrl>https://github.com/Janworks/MoodleLti</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Janworks/MoodleLti.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+</Project>

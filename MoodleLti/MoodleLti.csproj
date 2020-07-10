@@ -3,15 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>0.1.1</Version>
-    <Authors>Jan Wichelmann</Authors>
-    <Company />
     <Description>Utility library for creating own external tools via the Moodle LTI API.</Description>
-    <PackageProjectUrl>https://github.com/Janworks/MoodleLti</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Janworks/MoodleLti.git</RepositoryUrl>
-    <PackageLicenseExpression></PackageLicenseExpression>
-    <RepositoryType>git</RepositoryType>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
