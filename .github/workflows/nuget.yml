@@ -11,17 +11,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    # From https://github.community/t/how-to-get-just-the-tag-name/16241/7
+    - name: Extract verson from tag
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
-    - name: Build and Pack
-      id: publish_nuget
-      uses: rohith/publish-nuget@v2
-      with:
-        PROJECT_FILE_PATH: MoodleLti/MoodleLti.csproj
-        PACKAGE_NAME: MoodleLti
-        VERSION_STATIC: ${GITHUB_REF##*/}
-        TAG_COMMIT: false
-        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-        INCLUDE_SYMBOLS: true
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Pack & Push
+      run: |
+        dotnet pack --include-symbols -p:SymbolPackageFormat=snupkg --no-build -c Release -p:Version=${{ steps.get_version.outputs.VERSION }} MoodleLti/MoodleLti.csproj -o .
+        dotnet pack --include-symbols -p:SymbolPackageFormat=snupkg --no-build -c Release -p:Version=${{ steps.get_version.outputs.VERSION }} MoodleLti.DependencyInjection/MoodleLti.DependencyInjection.csproj -o .
+        dotnet nuget push MoodleLti.${{ steps.get_version.outputs.VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate
+        dotnet nuget push MoodleLti.DependencyInjection.${{ steps.get_version.outputs.VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate
