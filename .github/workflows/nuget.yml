@@ -1,0 +1,27 @@
+name: Pack & Upload
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Build and Pack
+      id: publish_nuget
+      uses: rohith/publish-nuget@v2
+      with:
+        PROJECT_FILE_PATH: MoodleLti/MoodleLti.csproj
+        PACKAGE_NAME: MoodleLti
+        VERSION_STATIC: ${GITHUB_REF##*/}
+        TAG_COMMIT: false
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+        INCLUDE_SYMBOLS: true
