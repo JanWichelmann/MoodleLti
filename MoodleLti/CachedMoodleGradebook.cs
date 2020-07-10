@@ -88,6 +88,10 @@ namespace MoodleLti
                 if(_gradebookColumns == null)
                     await FillCacheAsync();
 
+                // Does the column exist?
+                if(!_gradebookColumns.ContainsKey(id))
+                    throw new MoodleLtiException("The requested column does not exist.");
+
                 // Copy column from cache
                 return _gradebookColumns[id].Clone();
             }
@@ -106,9 +110,9 @@ namespace MoodleLti
                 if(_gradebookColumns == null)
                     await FillCacheAsync();
 
-                // Check whether column already exists
+                // Check whether column exists
                 if(!_gradebookColumns.ContainsKey(column.Id))
-                    throw new ArgumentException("Invalid column ID.");
+                    throw new MoodleLtiException("The requested column does not exist.");
 
                 // Send update to server
                 await base.UpdateColumnAsync(column);
@@ -153,7 +157,7 @@ namespace MoodleLti
 
                 // Check whether column exists
                 if(!_gradebookColumns.ContainsKey(columnId))
-                    throw new ArgumentException("Invalid column ID.");
+                    throw new MoodleLtiException("The requested column does not exist.");
 
                 // Delete column
                 await base.DeleteColumnAsync(columnId);

@@ -63,7 +63,6 @@ namespace MoodleLti
 
         public virtual async Task<MoodleGradebookColumn> GetColumnAsync(int id)
         {
-            // Get column
             var lineItem = await _ltiApi.GetLineItemAsync(id);
             return new MoodleGradebookColumn(lineItem);
         }
@@ -76,6 +75,14 @@ namespace MoodleLti
 
         public virtual async Task<MoodleGradebookColumn> CreateColumnAsync(string title, float maximumScore, string tag = null)
         {
+            // Title must not be null
+            if(title == null)
+                throw new ArgumentNullException(nameof(title));
+
+            // Score must be positive
+            if(maximumScore < 0)
+                throw new ArgumentOutOfRangeException(nameof(maximumScore), "The maximum score must not be negative.");
+
             // Create line item
             var lineItem = new MoodleLtiLineItem
             {
@@ -99,6 +106,10 @@ namespace MoodleLti
 
         public virtual async Task SetGradeAsync(int columnId, int userId, MoodleGradebookGrade grade)
         {
+            // Sanity check
+            if(grade.Score < 0)
+                throw new ArgumentOutOfRangeException(nameof(grade.Score), "The score must not be negative.");
+
             // Retrieve affected column
             var column = await GetColumnAsync(columnId);
 
