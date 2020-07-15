@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -71,8 +72,8 @@ namespace MoodleLti
             string url = $"{_serviceUrl}/lineitems?{_queryStringPrefix}";
 
             // Perform request and parse response body
-            string response = await DoGetRequestAsync(url, "application/vnd.ims.lis.v2.lineitemcontainer+json");
-            var lineItems = JsonConvert.DeserializeObject<List<MoodleLtiLineItem>>(response);
+            (string responseBody, HttpStatusCode _) = await DoGetRequestAsync(url, "application/vnd.ims.lis.v2.lineitemcontainer+json", new[] { HttpStatusCode.OK });
+            var lineItems = JsonConvert.DeserializeObject<List<MoodleLtiLineItem>>(responseBody);
 
             // Generate numeric IDs
             foreach(var lineItem in lineItems)
@@ -88,10 +89,10 @@ namespace MoodleLti
 
             // Serialize line item
             string serializedLineItem = JsonConvert.SerializeObject(lineItem, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            string result = await DoPostRequestAsync(url, serializedLineItem, "application/vnd.ims.lis.v2.lineitem+json");
+            (string responseBody, HttpStatusCode _) = await DoPostRequestAsync(url, serializedLineItem, "application/vnd.ims.lis.v2.lineitem+json", new[] { HttpStatusCode.Created });
 
             // Try to deserialize result
-            MoodleLtiLineItem resultLineItem = JsonConvert.DeserializeObject<MoodleLtiLineItem>(result);
+            MoodleLtiLineItem resultLineItem = JsonConvert.DeserializeObject<MoodleLtiLineItem>(responseBody);
 
             // Extract ID
             return GetNumericLineItemId(resultLineItem.StringId);
@@ -103,8 +104,8 @@ namespace MoodleLti
             string url = $"{_serviceUrl}/lineitems/{id}/lineitem?{_queryStringPrefix}";
 
             // Retrieve line item
-            string response = await DoGetRequestAsync(url, "application/vnd.ims.lis.v2.lineitem+json");
-            var lineItem = JsonConvert.DeserializeObject<MoodleLtiLineItem>(response);
+            (string responseBody, HttpStatusCode _) = await DoGetRequestAsync(url, "application/vnd.ims.lis.v2.lineitem+json", new[] { HttpStatusCode.OK });
+            var lineItem = JsonConvert.DeserializeObject<MoodleLtiLineItem>(responseBody);
             lineItem.Id = GetNumericLineItemId(lineItem.StringId);
 
             return lineItem;
@@ -118,9 +119,7 @@ namespace MoodleLti
             // Serialize line item
             lineItem.StringId = url;
             string serializedLineItem = JsonConvert.SerializeObject(lineItem, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            string result = await DoPutRequestAsync(url, serializedLineItem, "application/vnd.ims.lis.v2.lineitem+json");
-
-            // TODO check result
+            await DoPutRequestAsync(url, serializedLineItem, "application/vnd.ims.lis.v2.lineitem+json", new[] { HttpStatusCode.OK });
         }
 
         public async Task DeleteLineItemAsync(int id)
@@ -129,9 +128,7 @@ namespace MoodleLti
             string url = $"{_serviceUrl}/lineitems/{id}/lineitem?{_queryStringPrefix}";
 
             // Delete line item
-            string result = await DoDeleteRequestAsync(url);
-
-            // TODO check result
+            await DoDeleteRequestAsync(url, new[] { HttpStatusCode.NoContent });
         }
 
         public async Task UpdateScoreAsync(int lineItemId, MoodleLtiScore score)
@@ -141,18 +138,17 @@ namespace MoodleLti
 
             // Serialize and send score
             string serializedScore = JsonConvert.SerializeObject(score, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            string result = await DoPostRequestAsync(url, serializedScore, "application/vnd.ims.lis.v1.score+json");
-
-            // TODO check result
+            await DoPostRequestAsync(url, serializedScore, "application/vnd.ims.lis.v1.score+json", new[] { HttpStatusCode.OK });
         }
 
         /// <summary>
-        /// Performs a GET request and returns the response body, if it was successful.
+        /// Performs a GET request and returns the response body and its status code.
         /// </summary>
         /// <param name="url">The target URL.</param>
         /// <param name="expectedContentType">The expected response content type.</param>
-        /// <returns></returns>
-        private async Task<string> DoGetRequestAsync(string url, string expectedContentType)
+        /// <param name="expectedStatusCodes">The expected status codes. All other status codes trigger an exception.</param>
+        /// <exception cref="MoodleLtiException">Thrown when an unexpected HTTP status code is returned.</exception>
+        private async Task<(string responseBody, HttpStatusCode statusCode)> DoGetRequestAsync(string url, string expectedContentType, HttpStatusCode[] expectedStatusCodes)
         {
             // Assign content type
             _httpClient.DefaultRequestHeaders.Accept.Clear();
@@ -166,23 +162,31 @@ namespace MoodleLti
             await SecuredClient.SignRequest(_httpClient, reqMessage, _consumerKey, _sharedSecret, SignatureMethod.HmacSha1);
 
             // Send HTTP request and retrieve response
-            // TODO exception handling
-            using(var response = await _httpClient.SendAsync(reqMessage))
-            {
-                if(response.StatusCode == HttpStatusCode.OK)
-                    return await response.ReadBody();
-            }
-            return default;
+            using var response = await _httpClient.SendAsync(reqMessage);
+            string responseBody = await response.ReadBody();
+            if(expectedStatusCodes.Contains(response.StatusCode))
+                return (responseBody, response.StatusCode);
+
+            // An error occured
+            throw CreateExceptionFromFailedRequest(
+                response.StatusCode,
+                expectedStatusCodes,
+                response.RequestMessage.Headers.ToString(),
+                string.Empty,
+                response.Headers.ToString(),
+                responseBody
+            );
         }
 
         /// <summary>
-        /// Performs a POST request and returns the response body, if it was successful.
+        /// Performs a POST request and returns the response body and its status code.
         /// </summary>
         /// <param name="url">The target URL.</param>
         /// <param name="body">The POST body.</param>
         /// <param name="bodyContentType">The content type of the body.</param>
-        /// <returns></returns>
-        private async Task<string> DoPostRequestAsync(string url, string body, string bodyContentType)
+        /// <param name="expectedStatusCodes">The expected status codes. All other status codes trigger an exception.</param>
+        /// <exception cref="MoodleLtiException">Thrown when an unexpected HTTP status code is returned.</exception>
+        private async Task<(string responseBody, HttpStatusCode statusCode)> DoPostRequestAsync(string url, string body, string bodyContentType, HttpStatusCode[] expectedStatusCodes)
         {
             // Sign request object
             var encodedBody = new StringContent(body, Encoding.UTF8, bodyContentType);
@@ -193,19 +197,31 @@ namespace MoodleLti
             await SecuredClient.SignRequest(_httpClient, reqMessage, _consumerKey, _sharedSecret, SignatureMethod.HmacSha1);
 
             // Send HTTP request and retrieve response
-            // TODO exception handling
             using var response = await _httpClient.SendAsync(reqMessage);
-            return await response.ReadBody();
+            string responseBody = await response.ReadBody();
+            if(expectedStatusCodes.Contains(response.StatusCode))
+                return (responseBody, response.StatusCode);
+
+            // An error occured
+            throw CreateExceptionFromFailedRequest(
+                response.StatusCode,
+                expectedStatusCodes,
+                response.RequestMessage.Headers.ToString(),
+                body,
+                response.Headers.ToString(),
+                responseBody
+            );
         }
 
         /// <summary>
-        /// Performs a PUT request and returns the response body, if it was successful.
+        /// Performs a PUT request and returns the response body and its status code.
         /// </summary>
         /// <param name="url">The target URL.</param>
         /// <param name="body">The PUT body.</param>
         /// <param name="bodyContentType">The content type of the body.</param>
-        /// <returns></returns>
-        private async Task<string> DoPutRequestAsync(string url, string body, string bodyContentType)
+        /// <param name="expectedStatusCodes">The expected status codes. All other status codes trigger an exception.</param>
+        /// <exception cref="MoodleLtiException">Thrown when an unexpected HTTP status code is returned.</exception>
+        private async Task<(string responseBody, HttpStatusCode statusCode)> DoPutRequestAsync(string url, string body, string bodyContentType, HttpStatusCode[] expectedStatusCodes)
         {
             // Sign request object
             var encodedBody = new StringContent(body, Encoding.UTF8, bodyContentType);
@@ -216,17 +232,29 @@ namespace MoodleLti
             await SecuredClient.SignRequest(_httpClient, reqMessage, _consumerKey, _sharedSecret, SignatureMethod.HmacSha1);
 
             // Send HTTP request and retrieve response
-            // TODO exception handling
             using var response = await _httpClient.SendAsync(reqMessage);
-            return await response.ReadBody();
+            string responseBody = await response.ReadBody();
+            if(expectedStatusCodes.Contains(response.StatusCode))
+                return (responseBody, response.StatusCode);
+
+            // An error occured
+            throw CreateExceptionFromFailedRequest(
+                response.StatusCode,
+                expectedStatusCodes,
+                response.RequestMessage.Headers.ToString(),
+                body,
+                response.Headers.ToString(),
+                responseBody
+            );
         }
 
         /// <summary>
-        /// Performs a DELETE request and returns the response body, if it was successful.
+        /// Performs a DELETE request and returns the response body and its status code.
         /// </summary>
         /// <param name="url">The target URL.</param>
-        /// <returns></returns>
-        private async Task<string> DoDeleteRequestAsync(string url)
+        /// <param name="expectedStatusCodes">The expected status codes. All other status codes trigger an exception.</param>
+        /// <exception cref="MoodleLtiException">Thrown when an unexpected HTTP status code is returned.</exception>
+        private async Task<(string responseBody, HttpStatusCode statusCode)> DoDeleteRequestAsync(string url, HttpStatusCode[] expectedStatusCodes)
         {
             // Sign request object
             var reqMessage = new HttpRequestMessage(HttpMethod.Delete, url)
@@ -236,12 +264,49 @@ namespace MoodleLti
             await SecuredClient.SignRequest(_httpClient, reqMessage, _consumerKey, _sharedSecret, SignatureMethod.HmacSha1);
 
             // Send HTTP request and retrieve response
-            // TODO exception handling
-            using(var response = await _httpClient.SendAsync(reqMessage))
-            {
-                // Should return 204 NoContent
-            }
-            return default;
+            using var response = await _httpClient.SendAsync(reqMessage);
+            string responseBody = await response.ReadBody();
+            if(expectedStatusCodes.Contains(response.StatusCode))
+                return (responseBody, response.StatusCode);
+
+            // An error occured
+            throw CreateExceptionFromFailedRequest(
+                response.StatusCode,
+                expectedStatusCodes,
+                response.RequestMessage.Headers.ToString(),
+                string.Empty,
+                response.Headers.ToString(),
+                responseBody
+            );
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="MoodleLtiException"/> from the given HTTP request data.
+        /// </summary>
+        /// <param name="statusCode">Server status code.</param>
+        /// <param name="expectedStatusCodes">Expected server status codes.</param>
+        /// <param name="requestHeaders">Request headers.</param>
+        /// <param name="requestBody">Request body.</param>
+        /// <param name="responseHeaders">Response headers.</param>
+        /// <param name="responseBody">Response body.</param>
+        /// <returns></returns>
+        private static MoodleLtiException CreateExceptionFromFailedRequest(
+            HttpStatusCode statusCode,
+            HttpStatusCode[] expectedStatusCodes,
+            string requestHeaders,
+            string requestBody,
+            string responseHeaders,
+            string responseBody)
+        {
+            string expectedStatusCodesString = string.Join(", ", expectedStatusCodes);
+            var exception = new MoodleLtiException($"Unexpected HTTP status: {statusCode} (expected: {expectedStatusCodesString})");
+            exception.Data.Add("StatusCode", statusCode);
+            exception.Data.Add("StatusCodesExpected", expectedStatusCodesString);
+            exception.Data.Add("RequestHeaders", requestHeaders);
+            exception.Data.Add("RequestBody", requestBody);
+            exception.Data.Add("ResponseHeaders", responseHeaders);
+            exception.Data.Add("ResponseBody", responseBody);
+            return exception;
         }
 
         /// <summary>

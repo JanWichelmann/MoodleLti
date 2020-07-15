@@ -17,7 +17,7 @@ namespace MoodleLti.Extensions
         public static async Task<string> ReadBody(this HttpResponseMessage response)
         {
             // Read response body
-            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            await using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             using var streamReader = new StreamReader(stream);
             return await streamReader.ReadToEndAsync().ConfigureAwait(false);
         }
