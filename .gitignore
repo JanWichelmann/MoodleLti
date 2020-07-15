@@ -337,10 +337,6 @@ ASALocalRun/
 .localhistory/
 
 # BeatPulse healthcheck temp database
-<<<<<<< HEAD
 healthchecksdb
-/SampleToolProvider/Properties/launchSettings.json
+
 launchSettings.json
-=======
-healthchecksdb
->>>>>>> parent of d189dd3... Ignore launchSettings.json

@@ -33,7 +33,37 @@ namespace SampleToolProvider.Controllers
         [HttpPost]
         public IActionResult RenderError()
         {
-            return Unauthorized("Login only via Moodle");
+            return Unauthorized("Login via Moodle or /auth/login");
+        }
+
+        /// <summary>
+        /// Handles a login request via GET.
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet("login")]
+        public async Task<IActionResult> LoginAsync()
+        {
+            try
+            {
+                // Create identity
+                var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                identity.AddClaim(new Claim(ClaimTypes.Name, "test"));
+                identity.AddClaim(new Claim(ClaimTypes.Email, "test@test"));
+
+                // TODO role
+
+                // Sign in
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+
+                // TODO
+                return Ok("login successful");
+            }
+            catch
+            {
+                // TODO
+                throw;
+            }
         }
 
         /// <summary>
@@ -41,8 +71,8 @@ namespace SampleToolProvider.Controllers
         /// </summary>
         /// <returns></returns>
         [AllowAnonymous]
-        [HttpPost("login")]
-        public async Task<IActionResult> LoginAsync()
+        [HttpPost("moodle/login")]
+        public async Task<IActionResult> MoodleLoginAsync()
         {
             try
             {

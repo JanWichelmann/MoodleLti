@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Security.Policy;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -13,6 +14,8 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http;
+using MoodleLti;
 
 namespace SampleToolProvider
 {
@@ -37,9 +40,11 @@ namespace SampleToolProvider
             });
 
             // Http client objects
-            services.AddHttpClient();
+            services.AddTransient<HttpMessageHandlerBuilder, Utilities.CustomHttpMessageHandlerBuilder>();
+            services.AddHttpClient( );
 
             // Moodle LTI service
+            services.AddMoodleLtiApi();
             services.AddCachedMoodleGradebook();
 
             // MVC
@@ -64,13 +69,6 @@ namespace SampleToolProvider
             // Enable access control
             app.UseAuthentication();
             app.UseAuthorization();
-
-            // Error pages
-            app.UseStatusCodePages((StatusCodeContext context) =>
-            {
-                var response = context.HttpContext.Response;
-                    return HttpResponseWritingExtensions.WriteAsync(response, "Error");
-            });
 
             // Other middleware here...
 

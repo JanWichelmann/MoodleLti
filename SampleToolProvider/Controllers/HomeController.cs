@@ -13,6 +13,7 @@ using MoodleLti.Models;
 namespace SampleToolProvider.Controllers
 {
     [Authorize]
+    [Route("")]
     [Route("home")]
     public class HomeController : Controller
     {
