@@ -11,6 +11,7 @@ namespace MoodleLti
         /// </summary>
         /// <param name="lineItem">Line item object describing the line item to be created. This object is _not_ updated, use <see cref="GetLineItemAsync(int)"/> for retrieving the full line item instead.</param>
         /// <returns></returns>
+        /// <exception cref="MoodleLtiException">Thrown when an unexpected HTTP status code is returned.</exception>
         Task<int> CreateLineItemAsync(MoodleLtiLineItem lineItem);
 
         /// <summary>
@@ -18,6 +19,7 @@ namespace MoodleLti
         /// </summary>
         /// <param name="id">The ID of the line item to delete.</param>
         /// <returns></returns>
+        /// <exception cref="MoodleLtiException">Thrown when an unexpected HTTP status code is returned.</exception>
         Task DeleteLineItemAsync(int id);
 
         /// <summary>
@@ -25,12 +27,14 @@ namespace MoodleLti
         /// </summary>
         /// <param name="id">The ID of the line item to retrieve.</param>
         /// <returns></returns>
+        /// <exception cref="MoodleLtiException">Thrown when an unexpected HTTP status code is returned.</exception>
         Task<MoodleLtiLineItem> GetLineItemAsync(int id);
 
         /// <summary>
         /// Returns a list of line items.
         /// </summary>
         /// <returns></returns>
+        /// <exception cref="MoodleLtiException">Thrown when an unexpected HTTP status code is returned.</exception>
         Task<List<MoodleLtiLineItem>> GetLineItemsAsync();
 
         /// <summary>
@@ -38,6 +42,7 @@ namespace MoodleLti
         /// </summary>
         /// <param name="lineItem">The line item to update.</param>
         /// <returns></returns>
+        /// <exception cref="MoodleLtiException">Thrown when an unexpected HTTP status code is returned.</exception>
         Task UpdateLineItemAsync(MoodleLtiLineItem lineItem);
 
         /// <summary>

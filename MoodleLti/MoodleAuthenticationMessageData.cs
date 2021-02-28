@@ -11,13 +11,13 @@ namespace MoodleLti
     /// <summary>
     /// Provides access to the data sent in a LTI tool launch request.
     /// </summary>
-    public class MoodleAuthenticatonMessageData
+    public class MoodleAuthenticationMessageData
     {
         /// <summary>
         /// Creates a new data container from the given LTI request/response.
         /// </summary>
         /// <param name="ltiRequest">The LTI request/response object containing the basic launch data.</param>
-        internal MoodleAuthenticatonMessageData(LtiRequest ltiRequest)
+        internal MoodleAuthenticationMessageData(LtiRequest ltiRequest)
         {
             LtiRequest = ltiRequest;
 
