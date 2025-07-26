@@ -1,7 +1,4 @@
 ﻿using MoodleLti.Tests.Mocks;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MoodleLti.Tests
 {

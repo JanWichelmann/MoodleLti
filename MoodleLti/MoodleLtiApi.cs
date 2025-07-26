@@ -1,14 +1,11 @@
 ﻿using LtiLibrary.NetCore.Clients;
-using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.OAuth;
 using Microsoft.Extensions.Options;
 using MoodleLti.Extensions;
 using MoodleLti.Models;
 using MoodleLti.Options;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;

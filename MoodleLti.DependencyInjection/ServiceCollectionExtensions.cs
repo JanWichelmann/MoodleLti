@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
-using MoodleLti;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MoodleLti;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

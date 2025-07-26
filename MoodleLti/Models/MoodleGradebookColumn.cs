@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MoodleLti.Models
+﻿namespace MoodleLti.Models
 {
     /// <summary>
     /// Represents a column (aka exercise) in the Moodle gradebook.

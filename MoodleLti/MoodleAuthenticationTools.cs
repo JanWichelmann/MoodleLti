@@ -1,12 +1,7 @@
 ﻿using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Extensions;
-using LtiLibrary.NetCore.Lti.v1;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
 using System.Security;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 

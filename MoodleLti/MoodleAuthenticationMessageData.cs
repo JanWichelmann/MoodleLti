@@ -1,10 +1,7 @@
-﻿using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Lti.v1;
+﻿using LtiLibrary.NetCore.Lti.v1;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MoodleLti
 {
